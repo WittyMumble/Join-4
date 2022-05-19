@@ -24,6 +24,13 @@ public class gui extends JFrame implements ActionListener
     //files
     final String fileA = "yellow.png";
     final String fileB = "blue.png";
+    
+    //table
+    JTable tab;
+    int rows = 6;
+    int collumns = 9;
+    Object[] cols = {};
+    Object[][] data = {};
     public gui()
     {
         setTitle("Join 4"); //sets window title
@@ -58,10 +65,11 @@ public class gui extends JFrame implements ActionListener
         C.addActionListener(this);
         Help.add(C); //adds help button to help menu
 
+        //grid
+        //trying to use example from https://stackoverflow.com/questions/21158083/how-to-set-the-value-of-specific-cell-in-jtable
+        
+        
         this.pack();
-        
-        //Grid
-        
     }
 
     public void actionPerformed(ActionEvent e){
@@ -77,9 +85,9 @@ public class gui extends JFrame implements ActionListener
             pan = new JPanel(); //creates panel
             lab = new JLabel("connect the 4, make the beep-boop not connect the 4");
             pan.add(lab); //adds label to panel
-            fram.add(pan); //adds panel to frame
-            fram.setSize(400,90); //sets frame size
-            fram.show(); //shows frame and its contents
+            this.add(pan); //adds panel to frame
+            //fram.setSize(400,90); //sets frame size
+            this.show(); //shows frame and its contents
 
             break;
         }
