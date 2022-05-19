@@ -17,8 +17,13 @@ public class gui extends JFrame implements ActionListener
     JMenuBar bar;
     JMenu File, Help;
     JMenuItem A, B, C; //A=Play, B=Quit, C=Help
-    JTextField textField;
+    static JFrame fram;
+    static JLabel lab = new JLabel("");
+    JPanel pan;
     
+    //files
+    final String fileA = "yellow.png";
+    final String fileB = "blue.png";
     public gui()
     {
         setTitle("Join 4"); //sets window title
@@ -33,7 +38,7 @@ public class gui extends JFrame implements ActionListener
 
         bar = new JMenuBar(); //creates menu bar
         this.setJMenuBar(bar); //sets created bar as the menu bar being used
-        
+
         //File Menu
         File = new JMenu("File"); //file menu
         bar.add(File); //add file menu to bar
@@ -48,12 +53,15 @@ public class gui extends JFrame implements ActionListener
         //Help menu
         Help = new JMenu("Help"); //creates help menu
         bar.add(Help);// adds help menu to bar
-        
+
         JMenuItem C= new JMenuItem("HELP");
         C.addActionListener(this);
         Help.add(C); //adds help button to help menu
+
+        this.pack();
         
-       this.pack();
+        //Grid
+        
     }
 
     public void actionPerformed(ActionEvent e){
@@ -63,8 +71,18 @@ public class gui extends JFrame implements ActionListener
             System.exit(0);
             break;
             case "HELP":
-            JLabel label = new JLabel("connect the 4, make the beep-boop not connect the 4");
+            //text stuff
+
+            fram = new JFrame("info");
+            pan = new JPanel(); //creates panel
+            lab = new JLabel("connect the 4, make the beep-boop not connect the 4");
+            pan.add(lab); //adds label to panel
+            fram.add(pan); //adds panel to frame
+            fram.setSize(400,90); //sets frame size
+            fram.show(); //shows frame and its contents
+
             break;
         }
+
     }
 }
