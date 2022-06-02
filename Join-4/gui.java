@@ -9,6 +9,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*; //listener
 import java.util.Scanner; //input scanner
+import javax.swing.table.DefaultTableModel;
 public class gui extends JFrame implements ActionListener
 {
     //menu variables
@@ -28,9 +29,11 @@ public class gui extends JFrame implements ActionListener
     //table
     JTable tab;
     int rows = 6;
-    int collumns = 9;
-    Object[] cols = {};
-    Object[][] data = {};
+    int columns = 7;
+    
+    
+    //game
+    boolean gameStart=true;
     public gui()
     {
         setTitle("Join 4"); //sets window title
@@ -64,11 +67,20 @@ public class gui extends JFrame implements ActionListener
         JMenuItem C= new JMenuItem("HELP");
         C.addActionListener(this);
         Help.add(C); //adds help button to help menu
-
+        
+        
         //grid
-        //trying to use example from https://stackoverflow.com/questions/21158083/how-to-set-the-value-of-specific-cell-in-jtable
-        
-        
+        //trying to use example from http://www.java2s.com/Tutorials/Java/Java_Swing/1100__Java_Swing_JTable.htm
+        if (gameStart){
+            DefaultTableModel tabMod = (DefaultTableModel)tab.getModel(); //model for table. Jtable doesn't store information, so table model does that for it, and jtable displays it.
+            tabMod.setRowCount(rows);
+            tabMod.setColumnCount(columns);
+            for(int y=0;y<columns;y++){
+                for(int x=0;x<rows;x++){
+                    tab.setValueAt(new ImageIcon("empty.png"),x,y);
+                }
+            }
+        }
         this.pack();
     }
 
@@ -76,20 +88,20 @@ public class gui extends JFrame implements ActionListener
         String cmd=e.getActionCommand();
         switch(cmd){
             case "Quit":
-            System.exit(0);
-            break;
+                System.exit(0);
+                break;
             case "HELP":
-            //text stuff
-
-            fram = new JFrame("info");
-            pan = new JPanel(); //creates panel
-            lab = new JLabel("connect the 4, make the beep-boop not connect the 4");
-            pan.add(lab); //adds label to panel
-            this.add(pan); //adds panel to frame
-            //fram.setSize(400,90); //sets frame size
-            this.show(); //shows frame and its contents
-
-            break;
+                //text stuff
+                fram = new JFrame("info");
+                pan = new JPanel(); //creates panel
+                lab = new JLabel("connect the 4, make the beep-boop not connect the 4");
+                pan.add(lab); //adds label to panel
+                this.add(pan); //adds panel to frame
+                //fram.setSize(400,90); //sets frame size
+                this.show(); //shows frame and its contents
+                break;
+            case "Play": gameStart = true;
+                break;
         }
 
     }
