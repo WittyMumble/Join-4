@@ -9,7 +9,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*; //listener
 import java.util.Scanner; //input scanner
-import javax.swing.ImageIcon;
+
 public class gui extends JFrame implements ActionListener
 {
     //menu variables
@@ -23,16 +23,20 @@ public class gui extends JFrame implements ActionListener
     JPanel pan = new JPanel();
     String text = "connect the 4, make the beep-boop not connect the 4";
     
-    //files
-    private ImageIcon player = new ImageIcon("yellow.png");
-    private ImageIcon player2 = new ImageIcon("blue.png");
-    private ImageIcon empty = new ImageIcon("empty.png");
-    
     //table
     JTable tab;
     int rows = 6;
     int columns = 7;
-    Element board[][] = new Element[rows][columns];
+    int board[][] = new int[rows][columns];
+    
+    //Images
+    JPanel game = new JPanel();
+    Canvas graphic;
+    String fileName;
+    private ImageIcon piece = new ImageIcon(fileName);
+    int imX = 100;
+    int imY = 100;
+    
     
     //game
     boolean gameStart=true;
@@ -71,21 +75,30 @@ public class gui extends JFrame implements ActionListener
         JMenuItem C= new JMenuItem("HELP");
         C.addActionListener(this);
         Help.add(C); //adds help button to help menu
-        
+        this.pack();
         //https://stackoverflow.com/questions/22583164/simple-java-game-using-grid
         //Game board
+        game.setPreferredSize(new Dimension(imX,imY));
+        graphic = new Canvas();
+       
         for (int x=0;x<rows;x++){
             for(int y=0;y<columns;y++){
-                board[x][y] = new Element();
-                board[x][y].paintIcon(empty);
+                board[x][y] = 0;
+                fileName = "empty.png";
+                game.add(graphic); 
+                imY+=50;
             }
+            imX+=50;
         }
         
         add(pan);
         setVisible(true);
-        this.pack();
+        
     }
-
+    public void paint (Graphics g) {
+        super.paint(g);
+        piece.paintIcon(this,g,200,200);
+    }
     public void actionPerformed(ActionEvent e){
         String cmd=e.getActionCommand();
         switch(cmd){
