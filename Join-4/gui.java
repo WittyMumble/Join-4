@@ -3,13 +3,13 @@
  * four-in-a-row game that is definitely not Connect 4
  *
  * @author Lin Beliaeva
- * @version 17-05-22
+ * @version 9-06-22
  */
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*; //listener
 import java.util.Scanner; //input scanner
-import javax.swing.table.DefaultTableModel;
+import javax.swing.ImageIcon;
 public class gui extends JFrame implements ActionListener
 {
     //menu variables
@@ -20,17 +20,19 @@ public class gui extends JFrame implements ActionListener
     JMenuItem A, B, C; //A=Play, B=Quit, C=Help
     static JFrame fram;
     static JLabel lab = new JLabel("");
-    JPanel pan;
+    JPanel pan = new JPanel();
+    String text = "connect the 4, make the beep-boop not connect the 4";
     
     //files
-    final String fileA = "yellow.png";
-    final String fileB = "blue.png";
+    private ImageIcon player = new ImageIcon("yellow.png");
+    private ImageIcon player2 = new ImageIcon("blue.png");
+    private ImageIcon empty = new ImageIcon("empty.png");
     
     //table
     JTable tab;
     int rows = 6;
     int columns = 7;
-    
+    Element board[][] = new Element[rows][columns];
     
     //game
     boolean gameStart=true;
@@ -45,6 +47,8 @@ public class gui extends JFrame implements ActionListener
         this.pack(); //sizes window so content = above preferred size
         this.toFront(); //whether the window is placed infront of other windows
         this.setVisible(true); //visible window
+        this.setResizable(false);
+        pan.setLayout(new GridLayout(rows,columns));
 
         bar = new JMenuBar(); //creates menu bar
         this.setJMenuBar(bar); //sets created bar as the menu bar being used
@@ -68,19 +72,17 @@ public class gui extends JFrame implements ActionListener
         C.addActionListener(this);
         Help.add(C); //adds help button to help menu
         
-        
-        //grid
-        //trying to use example from http://www.java2s.com/Tutorials/Java/Java_Swing/1100__Java_Swing_JTable.htm
-        if (gameStart){
-            DefaultTableModel tabMod = (DefaultTableModel)tab.getModel(); //model for table. Jtable doesn't store information, so table model does that for it, and jtable displays it.
-            tabMod.setRowCount(rows);
-            tabMod.setColumnCount(columns);
+        //https://stackoverflow.com/questions/22583164/simple-java-game-using-grid
+        //Game board
+        for (int x=0;x<rows;x++){
             for(int y=0;y<columns;y++){
-                for(int x=0;x<rows;x++){
-                    tab.setValueAt(new ImageIcon("empty.png"),x,y);
-                }
+                board[x][y] = new Element();
+                board[x][y].paintIcon(empty);
             }
         }
+        
+        add(pan);
+        setVisible(true);
         this.pack();
     }
 
@@ -94,7 +96,7 @@ public class gui extends JFrame implements ActionListener
                 //text stuff
                 fram = new JFrame("info");
                 pan = new JPanel(); //creates panel
-                lab = new JLabel("connect the 4, make the beep-boop not connect the 4");
+                lab = new JLabel(text);
                 pan.add(lab); //adds label to panel
                 this.add(pan); //adds panel to frame
                 //fram.setSize(400,90); //sets frame size
@@ -105,4 +107,5 @@ public class gui extends JFrame implements ActionListener
         }
 
     }
+    
 }
