@@ -1,4 +1,3 @@
-
 /**
  * four-in-a-row game that is definitely not Connect 4
  *
@@ -20,7 +19,6 @@ public class gui extends JFrame implements ActionListener
     JMenuItem A, B, C; //A=Play, B=Quit, C=Help
     static JFrame fram;
     static JLabel lab = new JLabel("");
-    JPanel pan = new JPanel();
     String text = "connect the 4, make the beep-boop not connect the 4";
     
     //table
@@ -29,14 +27,16 @@ public class gui extends JFrame implements ActionListener
     int columns = 7;
     int board[][] = new int[rows][columns];
     
-    //Images
-    JPanel game = new JPanel();
-    Canvas graphic;
-    String fileName;
-    private ImageIcon piece = new ImageIcon(fileName);
-    int imX = 100;
-    int imY = 100;
+    int x;
+    int y;
+    Canvas canv;
     
+    final String player1="player.png";
+    final String player2="player2.png";
+    final String empty="empty.png";
+    ImageIcon image1=    new ImageIcon(player1);
+    ImageIcon image2=    new ImageIcon(player2);
+    ImageIcon imageEmpty= new ImageIcon(empty);
     
     //game
     boolean gameStart=true;
@@ -52,7 +52,7 @@ public class gui extends JFrame implements ActionListener
         this.toFront(); //whether the window is placed infront of other windows
         this.setVisible(true); //visible window
         this.setResizable(false);
-        pan.setLayout(new GridLayout(rows,columns));
+        
 
         bar = new JMenuBar(); //creates menu bar
         this.setJMenuBar(bar); //sets created bar as the menu bar being used
@@ -76,29 +76,46 @@ public class gui extends JFrame implements ActionListener
         C.addActionListener(this);
         Help.add(C); //adds help button to help menu
         this.pack();
-        //https://stackoverflow.com/questions/22583164/simple-java-game-using-grid
-        //Game board
-        game.setPreferredSize(new Dimension(imX,imY));
-        graphic = new Canvas();
-       
-        for (int x=0;x<rows;x++){
-            for(int y=0;y<columns;y++){
-                board[x][y] = 0;
-                fileName = "empty.png";
-                game.add(graphic); 
-                imY+=50;
-            }
-            imX+=50;
-        }
+        
+        x = 200;
+        y = 200;
+        JPanel pan = new JPanel();
+        pan.setPreferredSize(new Dimension(700,600));
+        canv = new Canvas();
+        pan.add(canv);
+    
         
         add(pan);
         setVisible(true);
+        repaint();
+    }
+    
+    public void paint(Graphics g){
+        super.paint(g);
+        for (int row=0;row<6; row++){ // x - row, y-column
+            for(int col=0; col<7; col++){
+                switch(board[row][col]){
+                    case 0: //empty cell
+                        imageEmpty.paintIcon(this,g,col*100+100,row*100+100);
+                        break;
+                    case 1: //player 1
+                        image1.paintIcon(this,g,col*100+100,row*100+100);
+                        break;
+                    case 2: //player 2
+                        image2.paintIcon(this,g,col*100+100,row*100+100);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
         
     }
-    public void paint (Graphics g) {
-        super.paint(g);
-        piece.paintIcon(this,g,200,200);
-    }
+    public void mouseExited(MouseEvent e){}
+    public void mouseEntered(MouseEvent e){}
+    public void mouseReleased(MouseEvent e){}
+    public void mousePressed(MouseEvent e){}
+    public void mouseClicked(MouseEvent e){}
     public void actionPerformed(ActionEvent e){
         String cmd=e.getActionCommand();
         switch(cmd){
@@ -107,13 +124,13 @@ public class gui extends JFrame implements ActionListener
                 break;
             case "HELP":
                 //text stuff
-                fram = new JFrame("info");
+               /* fram = new JFrame("info");
                 pan = new JPanel(); //creates panel
                 lab = new JLabel(text);
                 pan.add(lab); //adds label to panel
                 this.add(pan); //adds panel to frame
-                //fram.setSize(400,90); //sets frame size
-                this.show(); //shows frame and its contents
+                fram.setSize(400,90); //sets frame size
+                this.show(); //shows frame and its contents*/
                 break;
             case "Play": gameStart = true;
                 break;
