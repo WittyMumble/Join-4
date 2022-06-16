@@ -20,23 +20,26 @@ public class gui extends JFrame implements ActionListener
     static JFrame fram;
     static JLabel lab = new JLabel("");
     String text = "connect the 4, make the beep-boop not connect the 4";
-    
+
     //table
     JTable tab;
     int rows = 6;
     int columns = 7;
     int board[][] = new int[rows][columns];
-    
-    int x;
-    int y;
+
+    int x = 100; //game grid x
+    int y = 70; //game grid y
     Canvas canv;
-    
+
+    //images
     final String player1="player.png";
+    final String ghost="player-g.png";
     final String player2="player2.png";
     final String empty="empty.png";
     ImageIcon image1=    new ImageIcon(player1);
     ImageIcon image2=    new ImageIcon(player2);
     ImageIcon imageEmpty= new ImageIcon(empty);
+
     
     //game
     boolean gameStart=true;
@@ -52,7 +55,6 @@ public class gui extends JFrame implements ActionListener
         this.toFront(); //whether the window is placed infront of other windows
         this.setVisible(true); //visible window
         this.setResizable(false);
-        
 
         bar = new JMenuBar(); //creates menu bar
         this.setJMenuBar(bar); //sets created bar as the menu bar being used
@@ -76,66 +78,93 @@ public class gui extends JFrame implements ActionListener
         C.addActionListener(this);
         Help.add(C); //adds help button to help menu
         this.pack();
-        
-        x = 200;
-        y = 200;
+
         JPanel pan = new JPanel();
         pan.setPreferredSize(new Dimension(700,600));
         canv = new Canvas();
         pan.add(canv);
-    
-        
+
+        //test
+        board[0][0] = 1;
+        board[5][6] = 2;
+
+      
+
         add(pan);
         setVisible(true);
         repaint();
     }
-    
+
+    public void mouseEntered(MouseEvent e){
+        //ghost piece
+    }
+
+    public void mouseExited(MouseEvent e){
+        //remove ghost piece
+    }    
+
+    public void mouseReleased(MouseEvent e){}
+
+    public void mousePressed(MouseEvent e){}
+
+    public void mouseClicked(MouseEvent e){
+       while(gameStart){
+            //mouse
+            int mouseX = e.getX();
+            int mouseY = e.getY();
+            double placeX = Math.floor((mouseX-x)/100); //round to get column
+            double placeY = Math.floor((mouseY-y)/100); //round to get row
+            int mouseColumn=(int)placeX; //double to int conversion from javatpoint
+            if ((mouseX >= x)&&(mouseX<=(x+ columns*100))){
+                board[5][mouseColumn] = 1;
+            }
+            //if ((mouseY >= y)&&(mouseX<=(rows*100)))System.out.println(placeY);
+        }   //place piece
+        
+    }
+
     public void paint(Graphics g){
         super.paint(g);
-        for (int row=0;row<6; row++){ // x - row, y-column
+        for (int row=0;row<6; row++){ // x = row, y = column
             for(int col=0; col<7; col++){
                 switch(board[row][col]){
                     case 0: //empty cell
-                        imageEmpty.paintIcon(this,g,col*100+100,row*100+100);
-                        break;
+                    imageEmpty.paintIcon(this,g,col*100+y,row*100+x);
+                    break; //100 = accounting for image x and y
                     case 1: //player 1
-                        image1.paintIcon(this,g,col*100+100,row*100+100);
-                        break;
+                    image1.paintIcon(this,g,col*100+y,row*100+x);
+                    break;
                     case 2: //player 2
-                        image2.paintIcon(this,g,col*100+100,row*100+100);
-                        break;
+                    image2.paintIcon(this,g,col*100+y,row*100+x);
+                    break;
                     default:
-                        break;
+                    break;
                 }
             }
         }
-        
+
     }
-    public void mouseExited(MouseEvent e){}
-    public void mouseEntered(MouseEvent e){}
-    public void mouseReleased(MouseEvent e){}
-    public void mousePressed(MouseEvent e){}
-    public void mouseClicked(MouseEvent e){}
+
     public void actionPerformed(ActionEvent e){
         String cmd=e.getActionCommand();
         switch(cmd){
             case "Quit":
-                System.exit(0);
-                break;
+            System.exit(0);
+            break;
             case "HELP":
-                //text stuff
-               /* fram = new JFrame("info");
-                pan = new JPanel(); //creates panel
-                lab = new JLabel(text);
-                pan.add(lab); //adds label to panel
-                this.add(pan); //adds panel to frame
-                fram.setSize(400,90); //sets frame size
-                this.show(); //shows frame and its contents*/
-                break;
+            //text stuff
+            /* fram = new JFrame("info");
+            pan = new JPanel(); //creates panel
+            lab = new JLabel(text);
+            pan.add(lab); //adds label to panel
+            this.add(pan); //adds panel to frame
+            fram.setSize(400,90); //sets frame size
+            this.show(); //shows frame and its contents*/
+            break;
             case "Play": gameStart = true;
-                break;
+            break;
         }
 
     }
-    
+
 }
