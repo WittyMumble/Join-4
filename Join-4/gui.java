@@ -9,7 +9,7 @@ import java.awt.*;
 import java.awt.event.*; //listener
 import java.util.Scanner; //input scanner
 
-public class gui extends JFrame implements ActionListener
+public class gui extends JFrame implements ActionListener, MouseListener
 {
     //menu variables
     private int menuX;
@@ -20,7 +20,7 @@ public class gui extends JFrame implements ActionListener
     static JFrame fram;
     static JLabel lab = new JLabel("");
     String text = "connect the 4, make the beep-boop not connect the 4";
-
+    
     //table
     JTable tab;
     int rows = 6;
@@ -89,7 +89,7 @@ public class gui extends JFrame implements ActionListener
         board[5][6] = 2;
 
       
-
+        addMouseListener(this);
         add(pan);
         setVisible(true);
         repaint();
@@ -108,7 +108,7 @@ public class gui extends JFrame implements ActionListener
     public void mousePressed(MouseEvent e){}
 
     public void mouseClicked(MouseEvent e){
-       while(gameStart){
+       
             //mouse
             int mouseX = e.getX();
             int mouseY = e.getY();
@@ -116,10 +116,15 @@ public class gui extends JFrame implements ActionListener
             double placeY = Math.floor((mouseY-y)/100); //round to get row
             int mouseColumn=(int)placeX; //double to int conversion from javatpoint
             if ((mouseX >= x)&&(mouseX<=(x+ columns*100))){
+                for (int i=rows; i>0; i--){}
                 board[5][mouseColumn] = 1;
+                //y value
+                //status
+                repaint();
             }
+            System.out.println(placeX + "," + placeY + "," + mouseColumn);
             //if ((mouseY >= y)&&(mouseX<=(rows*100)))System.out.println(placeY);
-        }   //place piece
+           //place piece
         
     }
 
