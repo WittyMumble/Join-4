@@ -20,7 +20,7 @@ public class gui extends JFrame implements ActionListener, MouseListener
     static JFrame fram;
     static JLabel lab = new JLabel("");
     String text = "connect the 4, make the beep-boop not connect the 4";
-    
+
     //table
     JTable tab;
     int rows = 6;
@@ -39,15 +39,15 @@ public class gui extends JFrame implements ActionListener, MouseListener
     ImageIcon image1=    new ImageIcon(player1);
     ImageIcon image2=    new ImageIcon(player2);
     ImageIcon imageEmpty= new ImageIcon(empty);
+    ImageIcon image3=    new ImageIcon(ghost);
 
-    
     //game
     boolean gameStart=true;
     public gui()
     {
         setTitle("Join 4"); //sets window title
-        menuX = 1000;
-        menuY = 1000;
+        menuX = 850;
+        menuY = 800;
 
         this.getContentPane().setPreferredSize(new Dimension (menuX,menuY)); //set dimensions
         this.setDefaultCloseOperation(EXIT_ON_CLOSE); //what happens on close (exits the window)
@@ -85,10 +85,9 @@ public class gui extends JFrame implements ActionListener, MouseListener
         pan.add(canv);
 
         //test
-        board[0][0] = 1;
+        //  board[0][0] = 1;
         board[5][6] = 2;
 
-      
         addMouseListener(this);
         add(pan);
         setVisible(true);
@@ -96,10 +95,17 @@ public class gui extends JFrame implements ActionListener, MouseListener
     }
 
     public void mouseEntered(MouseEvent e){
+        int mouseX = e.getX();
+        double placeX = Math.floor((mouseX-x)/100); //round to get column
+        int mouseColumn=(int)placeX; //double to int conversion from javatpoint
         //ghost piece
+        board [0][mouseColumn] = 3;
     }
 
     public void mouseExited(MouseEvent e){
+        int mouseX = e.getX();
+        double placeX = Math.floor((mouseX-x)/100); //round to get column
+        int mouseColumn=(int)placeX; //double to int conversion from javatpoint
         //remove ghost piece
     }    
 
@@ -108,24 +114,31 @@ public class gui extends JFrame implements ActionListener, MouseListener
     public void mousePressed(MouseEvent e){}
 
     public void mouseClicked(MouseEvent e){
-       
-            //mouse
-            int mouseX = e.getX();
-            int mouseY = e.getY();
-            double placeX = Math.floor((mouseX-x)/100); //round to get column
-            double placeY = Math.floor((mouseY-y)/100); //round to get row
-            int mouseColumn=(int)placeX; //double to int conversion from javatpoint
-            if ((mouseX >= x)&&(mouseX<=(x+ columns*100))){
-                for (int i=rows; i>0; i--){}
-                board[5][mouseColumn] = 1;
-                //y value
-                //status
-                repaint();
+        //mouse
+        int mouseX = e.getX(); 
+        double placeX = Math.floor((mouseX-x)/100); 
+        int mouseColumn=(int)placeX; //copied all this bc can't think of more efficient way rn
+        if ((mouseX >= x)&&(mouseX<=(x+ columns*100))){//grid boundaries. if mouse is outside the grid then it doesnt care
+            if (board[0][mouseColumn] >= 0){
+                int mouseRow = 5;
+                
+                if (board[mouseRow][mouseColumn] != 0){
+                    mouseRow--;
+                    board[mouseRow][mouseColumn] = 1;
+                } else {board[mouseRow][mouseColumn] = 1;} //this isn't very efficient, but at least it sorta works
+                
+            } else {
+                System.out.println("this column is full!"); //change to dialog box later?
             }
-            System.out.println(placeX + "," + placeY + "," + mouseColumn);
-            //if ((mouseY >= y)&&(mouseX<=(rows*100)))System.out.println(placeY);
-           //place piece
-        
+
+            //y value
+            //status
+            repaint();
+        };
+        System.out.println(placeX + "," + mouseColumn);
+        //if ((mouseY >= y)&&(mouseX<=(rows*100)))System.out.println(placeY);
+        //place piece
+
     }
 
     public void paint(Graphics g){
@@ -142,6 +155,8 @@ public class gui extends JFrame implements ActionListener, MouseListener
                     case 2: //player 2
                     image2.paintIcon(this,g,col*100+y,row*100+x);
                     break;
+                    case 3:
+                    image3.paintIcon(this,g,col*100+y,row*100+x);
                     default:
                     break;
                 }
