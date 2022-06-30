@@ -43,6 +43,7 @@ public class gui extends JFrame implements ActionListener, MouseListener
 
     //game
     boolean gameStart=true;
+    int status; //whos turn it is
     public gui()
     {
         setTitle("Join 4"); //sets window title
@@ -107,6 +108,7 @@ public class gui extends JFrame implements ActionListener, MouseListener
         double placeX = Math.floor((mouseX-x)/100); //round to get column
         int mouseColumn=(int)placeX; //double to int conversion from javatpoint
         //remove ghost piece
+        board [0][mouseColumn] = 0;
     }    
 
     public void mouseReleased(MouseEvent e){}
@@ -120,70 +122,87 @@ public class gui extends JFrame implements ActionListener, MouseListener
         int mouseColumn=(int)placeX; //copied all this bc can't think of more efficient way rn
         if ((mouseX >= x)&&(mouseX<=(x+ columns*100))){//grid boundaries. if mouse is outside the grid then it doesnt care
             if (board[0][mouseColumn] >= 0){
+                /*boolean TO = false; //TO = Turnover
                 int mouseRow = 5;
-                
+
+                while (TO == false){
                 if (board[mouseRow][mouseColumn] != 0){
-                    mouseRow--;
-                    board[mouseRow][mouseColumn] = 1;
-                } else {board[mouseRow][mouseColumn] = 1;} //this isn't very efficient, but at least it sorta works
-                
-            } else {
-                System.out.println("this column is full!"); //change to dialog box later?
-            }
-
-            //y value
-            //status
-            repaint();
-        };
-        System.out.println(placeX + "," + mouseColumn);
-        //if ((mouseY >= y)&&(mouseX<=(rows*100)))System.out.println(placeY);
-        //place piece
-
-    }
-
-    public void paint(Graphics g){
-        super.paint(g);
-        for (int row=0;row<6; row++){ // x = row, y = column
-            for(int col=0; col<7; col++){
-                switch(board[row][col]){
-                    case 0: //empty cell
-                    imageEmpty.paintIcon(this,g,col*100+y,row*100+x);
-                    break; //100 = accounting for image x and y
-                    case 1: //player 1
-                    image1.paintIcon(this,g,col*100+y,row*100+x);
-                    break;
-                    case 2: //player 2
-                    image2.paintIcon(this,g,col*100+y,row*100+x);
-                    break;
-                    case 3:
-                    image3.paintIcon(this,g,col*100+y,row*100+x);
-                    default:
-                    break;
+                mouseRow--;
+                board[mouseRow][mouseColumn] = 1;
+                TO = !TO;
+                } else {
+                board[mouseRow][mouseColumn] = 1;
+                TO = !TO;
                 }
-            }
+                }*/
+
+            int lowRow = mouseColumn;{
+                int rowCheck = rows;
+                while (rowCheck >=0){
+                    if(board[rowCheck][mouseColumn]==0) {
+                        return rowCheck;
+                        rowCheck--;
+                    }
+                    return rowCheck;
+                }
+            };
+        } else {
+            System.out.println("this column is full!"); //change to dialog box later?
         }
 
-    }
+        //y value
+        //status
+        repaint();
+    };
+    System.out.println(placeX + "," + mouseColumn);
+    //if ((mouseY >= y)&&(mouseX<=(rows*100)))System.out.println(placeY);
+    //place piece
 
-    public void actionPerformed(ActionEvent e){
-        String cmd=e.getActionCommand();
-        switch(cmd){
-            case "Quit":
-            System.exit(0);
-            break;
-            case "HELP":
-            //text stuff
-            /* fram = new JFrame("info");
-            pan = new JPanel(); //creates panel
-            lab = new JLabel(text);
-            pan.add(lab); //adds label to panel
-            this.add(pan); //adds panel to frame
-            fram.setSize(400,90); //sets frame size
-            this.show(); //shows frame and its contents*/
-            break;
-            case "Play": gameStart = true;
-            break;
-        }
+}
+
+public void paint(Graphics g){
+super.paint(g);
+for (int row=0;row<6; row++){ // x = row, y = column
+for(int col=0; col<7; col++){
+switch(board[row][col]){
+case 0: //empty cell
+imageEmpty.paintIcon(this,g,col*100+y,row*100+x);
+break; //100 = accounting for image x and y
+case 1: //player 1
+image1.paintIcon(this,g,col*100+y,row*100+x);
+break;
+case 2: //player 2
+image2.paintIcon(this,g,col*100+y,row*100+x);
+break;
+case 3:
+image3.paintIcon(this,g,col*100+y,row*100+x);
+default:
+break;
+}
+}
+}
+
+}
+
+public void actionPerformed(ActionEvent e){
+String cmd=e.getActionCommand();
+switch(cmd){
+case "Quit":
+System.exit(0);
+break;
+case "HELP":
+//text stuff
+/* fram = new JFrame("info");
+pan = new JPanel(); //creates panel
+lab = new JLabel(text);
+pan.add(lab); //adds label to panel
+this.add(pan); //adds panel to frame
+fram.setSize(400,90); //sets frame size
+this.show(); //shows frame and its contents*/
+break;
+case "Play": gameStart = true;
+break;
+}
 
     }
 
