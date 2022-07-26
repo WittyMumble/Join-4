@@ -2,7 +2,7 @@
  * four-in-a-row game that is definitely not Connect 4
  *
  * @author Lin Beliaeva
- * @version 9-06-22
+ * @version 26-07-22
  */
 import javax.swing.*;
 import java.awt.*;
@@ -31,19 +31,20 @@ public class gui extends JFrame implements ActionListener, MouseListener
     int y = 70; //game grid y
     Canvas canv;
 
-    //images
+    //image files
     final String player1="player.png";
-    final String ghost="player-g.png";
     final String player2="player2.png";
     final String empty="empty.png";
+    final String select="select.png";
+    //image icons
     ImageIcon image1=    new ImageIcon(player1);
     ImageIcon image2=    new ImageIcon(player2);
     ImageIcon imageEmpty= new ImageIcon(empty);
-    ImageIcon image3=    new ImageIcon(ghost);
+    ImageIcon image3=    new ImageIcon(select);
 
-    //game
+    //game statuses
     boolean gameStart=true;
-    int currentPlayer = 1; //whos turn it is
+    int currentPlayer = 1; //whos turn it is. player 1 starts.
     public gui()
     {
         setTitle("Join 4"); //sets window title
@@ -85,9 +86,9 @@ public class gui extends JFrame implements ActionListener, MouseListener
         canv = new Canvas();
         pan.add(canv);
 
-        //test
-        //  board[0][0] = 1;
-        board[5][6] = 2;
+        
+        //board[0][0] = 1; //test
+        
 
         addMouseListener(this);
         add(pan);
@@ -96,7 +97,7 @@ public class gui extends JFrame implements ActionListener, MouseListener
     }
 
     public int returnColumn (int mFromLeft){
-        double placeX = Math.floor((mFromLeft-x)/100);
+        double placeX = Math.floor((mFromLeft-70)/100);
         return (int) placeX; //copied all this bc can't think of more efficient way rn
 
     }
@@ -110,25 +111,12 @@ public class gui extends JFrame implements ActionListener, MouseListener
             currentPlayer = 1;
             return;
         }
-
+        //does what it says: changes player when trigerred. could be written better but its a basic piece of code anyway
     }
-
-    public void mouseEntered(MouseEvent e){
-        int mouseX = e.getX();
-        System.out.println("mouse enter");
-        //ghost piece
-    }
-
-    public void mouseExited(MouseEvent e){
-        int mouseX = e.getX();
-        System.out.println("mouse leave");
-        //remove ghost piece
-    }    
-
+    public void mouseEntered(MouseEvent e){}
+    public void mouseExited(MouseEvent e){}    
     public void mouseReleased(MouseEvent e){}
-
     public void mousePressed(MouseEvent e){}
-
     public void mouseClicked(MouseEvent e){
         System.out.println("mouse click");
         //when player clicks, column is chosen in accordance to mouse X position, and then piece is placed in bottom-most open row within that column
@@ -147,6 +135,13 @@ public class gui extends JFrame implements ActionListener, MouseListener
                 }
                 board[mouseRow-1][mouseColumn] = currentPlayer;
                 //[INSERT 4 IN A ROW ALGORITHM HERE]
+                //horizontal win
+                //if there's a piece in the colour of the current player in the bottom row, check if next column has the colour.
+                //use a counter of some kind to keep track.
+                //if counter reaches 4 = win
+                //if none in last row, move up and repeat.
+                //vertical win
+                //diagonal win
                 changePlayer();
             } else {
                 System.out.println("this column is full!"); //change to dialog box later?
@@ -157,9 +152,6 @@ public class gui extends JFrame implements ActionListener, MouseListener
             repaint();
         };
         System.out.println(mouseColumn);
-        //if ((mouseY >= y)&&(mouseX<=(rows*100)))System.out.println(placeY);
-        //place piece
-
     }
 
     public void paint(Graphics g){
