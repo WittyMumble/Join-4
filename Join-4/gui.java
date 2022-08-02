@@ -2,7 +2,7 @@
  * four-in-a-row game that is definitely not Connect 4
  *
  * @author Lin Beliaeva
- * @version 26-07-22
+ * @version 02-08-22
  */
 import javax.swing.*;
 import java.awt.*;
@@ -43,7 +43,7 @@ public class gui extends JFrame implements ActionListener, MouseListener
     ImageIcon image3=    new ImageIcon(select);
 
     //game statuses
-    boolean gameStart=true;
+    boolean gameStart=false;
     int currentPlayer = 1; //whos turn it is. player 1 starts.
     public gui()
     {
@@ -86,10 +86,7 @@ public class gui extends JFrame implements ActionListener, MouseListener
         canv = new Canvas();
         pan.add(canv);
 
-        
         //board[0][0] = 1; //test
-        
-
         addMouseListener(this);
         add(pan);
         setVisible(true);
@@ -113,10 +110,15 @@ public class gui extends JFrame implements ActionListener, MouseListener
         }
         //does what it says: changes player when trigerred. could be written better but its a basic piece of code anyway
     }
+
     public void mouseEntered(MouseEvent e){}
+
     public void mouseExited(MouseEvent e){}    
+
     public void mouseReleased(MouseEvent e){}
+
     public void mousePressed(MouseEvent e){}
+
     public void mouseClicked(MouseEvent e){
         System.out.println("mouse click");
         //when player clicks, column is chosen in accordance to mouse X position, and then piece is placed in bottom-most open row within that column
@@ -140,6 +142,13 @@ public class gui extends JFrame implements ActionListener, MouseListener
                 //use a counter of some kind to keep track.
                 //if counter reaches 4 = win
                 //if none in last row, move up and repeat.
+                int colCheck = 0;
+                while (colCheck < 6){
+                    for(int i = 0; i < 7; i++){
+                        // ugh. make it check for if there's a piece, and if the counter is less than 4 or not. make a counter. that's a pretty important detail make a counter.
+                    }
+                }
+                
                 //vertical win
                 //diagonal win
                 changePlayer();
@@ -156,46 +165,40 @@ public class gui extends JFrame implements ActionListener, MouseListener
 
     public void paint(Graphics g){
         super.paint(g);
+
         for (int row=0;row<6; row++){ // x = row, y = column
             for(int col=0; col<7; col++){
                 switch(board[row][col]){
                     case 0: //empty cell
-                        imageEmpty.paintIcon(this,g,col*100+y,row*100+x);
-                        break; //100 = accounting for image x and y
+                    imageEmpty.paintIcon(this,g,col*100+y,row*100+x);
+                    break; //100 = accounting for image x and y
                     case 1: //player 1
-                        image1.paintIcon(this,g,col*100+y,row*100+x);
-                        break;
+                    image1.paintIcon(this,g,col*100+y,row*100+x);
+                    break;
                     case 2: //player 2
-                        image2.paintIcon(this,g,col*100+y,row*100+x);
-                        break;
+                    image2.paintIcon(this,g,col*100+y,row*100+x);
+                    break;
                     case 3:
-                        image3.paintIcon(this,g,col*100+y,row*100+x);
+                    image3.paintIcon(this,g,col*100+y,row*100+x);
                     default:
-                        break;
+                    break;
                 }
             }
         }
-
     }
 
     public void actionPerformed(ActionEvent e){
         String cmd=e.getActionCommand();
         switch(cmd){
             case "Quit":
-                System.exit(0);
-                break;
+            System.exit(0);
+            break;
             case "HELP":
-                //text stuff
-                /* fram = new JFrame("info");
-                pan = new JPanel(); //creates panel
-                lab = new JLabel(text);
-                pan.add(lab); //adds label to panel
-                this.add(pan); //adds panel to frame
-                fram.setSize(400,90); //sets frame size
-                this.show(); //shows frame and its contents*/
-                break;
+            //text stuff
+            // try adding it as a panel again but if that goes to shit maybe try dialog boxes instead
+            break;
             case "Play": gameStart = true;
-                break;
+            break;
         }
 
     }
