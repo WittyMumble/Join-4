@@ -43,7 +43,8 @@ public class gui extends JFrame implements ActionListener, MouseListener
     ImageIcon image3=    new ImageIcon(select);
 
     //game statuses
-    boolean gameStart=true;
+    boolean gameInProgress=false;
+    boolean loadGame = false;
     int currentPlayer = 1; //whos turn it is. player 1 starts.
     public gui()
     {
@@ -88,6 +89,7 @@ public class gui extends JFrame implements ActionListener, MouseListener
         pan.add(canv);
 
         //board[0][0] = 1; //test
+        
         addMouseListener(this);
         add(pan);
         setVisible(true);
@@ -115,6 +117,7 @@ public class gui extends JFrame implements ActionListener, MouseListener
     public void gameWin(){
         if(currentPlayer == 1) System.out.println("Blue wins!");
         if(currentPlayer == 2) System.out.println("Yellow wins!");
+        gameInProgress = false;
     }
 
     public void mouseEntered(MouseEvent e){}
@@ -126,73 +129,78 @@ public class gui extends JFrame implements ActionListener, MouseListener
     public void mousePressed(MouseEvent e){}
 
     public void mouseClicked(MouseEvent e){
+        if (gameInProgress){    
         //System.out.println("mouse click");
-        //when player clicks, column is chosen in accordance to mouse X position, and then piece is placed in bottom-most open row within that column
-        //mouse
-        int mouseX = e.getX(); 
-        int mouseColumn = returnColumn(mouseX);
-        int mouseRow;
-        int countRow = 0; //current row for point counting purposes
-        if ((mouseX >= x)&&(mouseX<=(x+ columns*100))){//grid boundaries. if mouse is outside the grid then it doesnt care
-            if (board[0][mouseColumn] == 0){ //if there is space in the column (if the top slot isn't taken)
-                //placing pieces
-                for(mouseRow = 0;mouseRow<rows;mouseRow++){//for loop checking all rows
-                    if(board[mouseRow][mouseColumn] > 0){ //if slots aren't empty
-                        board[mouseRow-1][mouseColumn] = currentPlayer; //sets slot to current player, aka places the piece
-                        countRow = mouseRow-1; //sets variable for counting horizontal tokens
-                        break;
+            //when player clicks, column is chosen in accordance to mouse X position, and then piece is placed in bottom-most open row within that column
+            //mouse
+            int mouseX = e.getX(); 
+            int mouseColumn = returnColumn(mouseX);
+            int mouseRow;
+            int countRow = 5; //current row for point counting purposes
+            if ((mouseX >= x)&&(mouseX<=(x+ columns*100))){//grid boundaries. if mouse is outside the grid then it doesnt care
+                if (board[0][mouseColumn] == 0){ //if there is space in the column (if the top slot isn't taken)
+                    //placing pieces
+                    for(mouseRow = 0;mouseRow<rows;mouseRow++){//for loop checking all rows
+                        if(board[mouseRow][mouseColumn] > 0){ //if slots aren't empty
+                            board[mouseRow-1][mouseColumn] = currentPlayer; //sets slot to current player, aka places the piece
+                            countRow = mouseRow-1;//sets variable for counting horizontal tokens
+                            System.out.println("row is " + countRow);
+                            break;
+                        }
                     }
-                }
-                board[mouseRow-1][mouseColumn] = currentPlayer;
-                
-                //horizontal win
-                int count = 0; //reset counter
-                System.out.println("row is " + countRow);
-                System.out.println("player is " + currentPlayer);
-                for (int i=0; i<columns;i++){ //for loop for checking through all columns
-                    if(board[countRow][i]==currentPlayer){
-                        count++; //if a given slot has the token of the current player, counter goes up
-                    } else {
-                        count = 0; //if the streak stops, th counter restarts
-                    }
-                    System.out.println(count);
+                    board[mouseRow-1][mouseColumn] = currentPlayer;
                     
+                    //horizontal win
+                    int count = 0; //reset counter
+                    
+                    System.out.println("player is " + currentPlayer);
+                    for (int i=0; i<columns;i++){ //for loop for checking through all columns
+                        if(board[countRow][i]==currentPlayer){
+                            count++; //if a given slot has the token of the current player, counter goes up
+                            if (count==4) gameWin();
+                        } else {
+                            count = 0; //if the streak stops, the counter restarts
+                        }
+                        System.out.println(count);
+                        
+                    }
+                    changePlayer();
+                    
+                    //vertical win
+                    //diagonal win
+                    
+                } else { //else if the top of the column is already full
+                    System.out.println("this column is full!"); //change to dialog box later?
                 }
-                if (count>=4) {gameWin();} else {changePlayer();}
-                
-                //vertical win
-                //diagonal win
-                
-            } else { //else if the top of the column is already full
-                System.out.println("this column is full!"); //change to dialog box later?
-            }
-
-            //y value
-            //status
-            repaint();
-        };
-        System.out.println("column is " + mouseColumn);
+    
+                //y value
+                //status
+                repaint();
+            };
+            System.out.println("column is " + mouseColumn);
+        }
     }
 
     public void paint(Graphics g){
         super.paint(g);
-
-        for (int row=0;row<rows; row++){ // x = row, y = column
-            for(int col=0; col<columns; col++){
-                switch(board[row][col]){
-                    case 0: //empty cell
-                    imageEmpty.paintIcon(this,g,col*100+y,row*100+x);
-                    break; //100 = accounting for image x and y
-                    case 1: //player 1
-                    image1.paintIcon(this,g,col*100+y,row*100+x);
-                    break;
-                    case 2: //player 2
-                    image2.paintIcon(this,g,col*100+y,row*100+x);
-                    break;
-                    case 3:
-                    image3.paintIcon(this,g,col*100+y,row*100+x);
-                    default:
-                    break;
+        if (loadGame){    
+            for (int row=0;row<rows; row++){ // x = row, y = column
+                for(int col=0; col<columns; col++){
+                    switch(board[row][col]){
+                        case 0: //empty cell
+                        imageEmpty.paintIcon(this,g,col*100+y,row*100+x);
+                        break; //100 = accounting for image x and y
+                        case 1: //player 1
+                        image1.paintIcon(this,g,col*100+y,row*100+x);
+                        break;
+                        case 2: //player 2
+                        image2.paintIcon(this,g,col*100+y,row*100+x);
+                        break;
+                        case 3:
+                        image3.paintIcon(this,g,col*100+y,row*100+x);
+                        default:
+                        break;
+                    }
                 }
             }
         }
@@ -208,7 +216,7 @@ public class gui extends JFrame implements ActionListener, MouseListener
             //text stuff
             // try adding it as a panel again but if that goes to shit maybe try dialog boxes instead
             break;
-            case "Play": gameStart = true;
+            case "Play": gameInProgress = true; loadGame = true; repaint();
             break;
         }
 
