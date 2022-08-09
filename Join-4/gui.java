@@ -157,17 +157,31 @@ public class gui extends JFrame implements ActionListener, MouseListener
                     for (int i=0; i<columns;i++){ //for loop for checking through all columns
                         if(board[countRow][i]==currentPlayer){
                             count++; //if a given slot has the token of the current player, counter goes up
-                            if (count==4) gameWin();
+                            if (count>=4) gameWin();
                         } else {
                             count = 0; //if the streak stops, the counter restarts
                         }
-                        System.out.println(count);
-                        
+                        System.out.println("horizontal " + count);
                     }
-                    changePlayer();
                     
                     //vertical win
-                    //diagonal win
+                    for (int i=0; i<rows; i++){
+                        if(board[i][mouseColumn]==currentPlayer){
+                            count++;
+                            if (count>=4) gameWin();
+                        } else {
+                            count = 0;
+                        }
+                        System.out.println("vertical " + count);
+                    }
+                    
+                    //diagonal down-right/up-left win
+                    
+                    //diagonal up-right/down-left win
+                    
+                    //diagonal 
+                    
+                    changePlayer();
                     
                 } else { //else if the top of the column is already full
                     System.out.println("this column is full!"); //change to dialog box later?
