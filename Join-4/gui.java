@@ -23,10 +23,9 @@ public class gui extends JFrame implements ActionListener, MouseListener
 
     //table
     JTable tab;
-    int rows = 6;
-    int columns = 7;
-    int board[][] = new int[rows][columns];
-
+    int rows = 6; //maximum number of rows
+    int columns = 7; //maximum number of columns
+    int board[][] = new int[rows][columns]; //array that stores the states of the grid itself
     int x = 100; //game grid x
     int y = 70; //game grid y
     Canvas canv;
@@ -43,9 +42,9 @@ public class gui extends JFrame implements ActionListener, MouseListener
     ImageIcon image3=    new ImageIcon(select);
 
     //game statuses
-    boolean gameInProgress=false;
-    boolean loadGame = false;
-    int currentPlayer = 1; //whos turn it is. player 1 starts.
+    boolean gameInProgress=false; //whether or not the game has started
+    boolean loadGame = false; //whether or not the game has been loaded. this is a separate boolean from gameInProgress so that gameplay can be ended, but the board will remain loaded
+    int currentPlayer = 1; //whos turn it is. player 1 starts on default.
     public gui()
     {
         System.out.println('\u000c'); //clears terminal  
@@ -98,7 +97,8 @@ public class gui extends JFrame implements ActionListener, MouseListener
 
     public int returnColumn (int mFromLeft){
         double placeX = Math.floor((mFromLeft-70)/100);
-        return (int) placeX; //copied all this bc can't think of more efficient way rn
+        return (int) placeX;
+        //I don't rmeember where exactly I got this method, but it is definitely not entirely my original work
 
     }
 
@@ -118,6 +118,14 @@ public class gui extends JFrame implements ActionListener, MouseListener
         if(currentPlayer == 1) System.out.println("Blue wins!");
         if(currentPlayer == 2) System.out.println("Yellow wins!");
         gameInProgress = false;
+    }
+    
+    public void clearBoard(){
+        for (int j=0;j<rows; j++){ // x = row, y = column
+            for(int i=0; i<columns; i++){
+                board[j][i]=0;
+            }
+        }
     }
 
     public void mouseEntered(MouseEvent e){}
@@ -228,9 +236,10 @@ public class gui extends JFrame implements ActionListener, MouseListener
             break;
             case "HELP":
             //text stuff
-            // try adding it as a panel again but if that goes to shit maybe try dialog boxes instead
+            //text string outside of void
+            //void loop for the dialog box itself
             break;
-            case "Play": gameInProgress = true; loadGame = true; repaint();
+            case "Play": gameInProgress = true; loadGame = true; clearBoard(); repaint();
             break;
         }
 
