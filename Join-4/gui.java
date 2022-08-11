@@ -2,7 +2,7 @@
  * four-in-a-row game that is definitely not Connect 4
  *
  * @author Lin Beliaeva
- * @version 02-08-22
+ * @version 12-08-22
  */
 import javax.swing.*;
 import java.awt.*;
@@ -19,7 +19,7 @@ public class gui extends JFrame implements ActionListener, MouseListener
     JMenuItem A, B, C; //A=Play, B=Quit, C=Help
     static JFrame fram;
     static JLabel lab = new JLabel("");
-    String text = "connect the 4, make the beep-boop not connect the 4";
+    String text = "hello";
 
     //table
     JTable tab;
@@ -86,8 +86,6 @@ public class gui extends JFrame implements ActionListener, MouseListener
         pan.setPreferredSize(new Dimension(700,600));
         canv = new Canvas();
         pan.add(canv);
-
-        //board[0][0] = 1; //test
         
         addMouseListener(this);
         add(pan);
@@ -183,11 +181,8 @@ public class gui extends JFrame implements ActionListener, MouseListener
                         System.out.println("vertical " + count);
                     }
                     
-                    //diagonal down-right/up-left win
+                    //diagonal win
                     
-                    //diagonal up-right/down-left win
-                    
-                    //diagonal 
                     
                     changePlayer();
                     
@@ -210,22 +205,26 @@ public class gui extends JFrame implements ActionListener, MouseListener
                 for(int col=0; col<columns; col++){
                     switch(board[row][col]){
                         case 0: //empty cell
-                        imageEmpty.paintIcon(this,g,col*100+y,row*100+x);
-                        break; //100 = accounting for image x and y
+                            imageEmpty.paintIcon(this,g,col*100+y,row*100+x);
+                            break; //100 = accounting for image x and y
                         case 1: //player 1
-                        image1.paintIcon(this,g,col*100+y,row*100+x);
-                        break;
+                            image1.paintIcon(this,g,col*100+y,row*100+x);
+                            break;
                         case 2: //player 2
-                        image2.paintIcon(this,g,col*100+y,row*100+x);
-                        break;
+                            image2.paintIcon(this,g,col*100+y,row*100+x);
+                            break;
                         case 3:
-                        image3.paintIcon(this,g,col*100+y,row*100+x);
+                            image3.paintIcon(this,g,col*100+y,row*100+x);
+                            break;
                         default:
-                        break;
+                            break;
                     }
                 }
             }
         }
+        
+        Graphics2D g2 = (Graphics2D) g;
+        g2.drawString(text,x+100,y+100);
     }
 
     public void actionPerformed(ActionEvent e){
