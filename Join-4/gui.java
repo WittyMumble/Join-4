@@ -19,7 +19,7 @@ public class gui extends JFrame implements ActionListener, MouseListener
     JMenuItem A, B, C; //A=Play, B=Quit, C=Help
     static JFrame fram;
     static JLabel lab = new JLabel("");
-    String text = "hello";
+    String text = "";
 
     //table
     JTable tab;
@@ -103,19 +103,24 @@ public class gui extends JFrame implements ActionListener, MouseListener
     public void changePlayer(){
         if(currentPlayer == 1) {
             currentPlayer = 2;
+            if (gameInProgress)text = "Yellow's Turn";
+            repaint();
             return;
         }
         if(currentPlayer == 2) {
             currentPlayer = 1;
+            if (gameInProgress)text = "Blue's Turn";
+            repaint();
             return;
         }
+        
         //does what it says: changes player when trigerred. could be written better but its a basic piece of code anyway
     }
     
     public void gameWin(){
-        if(currentPlayer == 1) System.out.println("Blue wins!");
-        if(currentPlayer == 2) System.out.println("Yellow wins!");
         gameInProgress = false;
+        if(currentPlayer == 1) text = "Blue wins!"; repaint(); //there's probablly a better way of doing this
+        if(currentPlayer == 2) text = "Yellow wins!"; repaint(); //seriously this is a lot of repaints
     }
     
     public void clearBoard(){
@@ -182,7 +187,11 @@ public class gui extends JFrame implements ActionListener, MouseListener
                     }
                     
                     //diagonal win
-                    
+                    for(int y = 5; y>=3; y--){
+                        for(int x = 0; x < columns; x++){
+                            
+                        }
+                    }
                     
                     changePlayer();
                     
@@ -224,22 +233,28 @@ public class gui extends JFrame implements ActionListener, MouseListener
         }
         
         Graphics2D g2 = (Graphics2D) g;
-        g2.drawString(text,x+100,y+100);
+        g2.drawString(text,80,730);
     }
-
+    
     public void actionPerformed(ActionEvent e){
         String cmd=e.getActionCommand();
         switch(cmd){
             case "Quit":
-            System.exit(0);
-            break;
+                System.exit(0);
+                break;
             case "HELP":
             //text stuff
             //text string outside of void
             //void loop for the dialog box itself
-            break;
-            case "Play": gameInProgress = true; loadGame = true; clearBoard(); repaint();
-            break;
+                break;
+            case "Play": {
+                gameInProgress = true; 
+                loadGame = true; 
+                clearBoard(); 
+                if (currentPlayer == 1) text = "Blue Starts";
+                else text = "Yellow Starts";
+                repaint();
+                break;}
         }
 
     }
