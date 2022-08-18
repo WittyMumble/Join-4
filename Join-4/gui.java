@@ -1,13 +1,16 @@
+
+
 /**
  * four-in-a-row game that is definitely not Connect 4
  *
  * @author Lin Beliaeva
- * @version 12-08-22
+ * @version 18-08-22
  */
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*; //listener
 import java.util.Scanner; //input scanner
+import java.util.Random;
 
 public class gui extends JFrame implements ActionListener, MouseListener
 {
@@ -20,14 +23,15 @@ public class gui extends JFrame implements ActionListener, MouseListener
     static JFrame fram;
     static JLabel lab = new JLabel("");
     String text = "";
+    String text2 = "";
 
     //table
     JTable tab;
     int rows = 6; //maximum number of rows
     int columns = 7; //maximum number of columns
     int board[][] = new int[rows][columns]; //array that stores the states of the grid itself
-    int x = 100; //game grid x
-    int y = 70; //game grid y
+    int x = 70; //game grid x
+    int y = 150; //game grid y
     Canvas canv;
 
     //image files
@@ -44,7 +48,7 @@ public class gui extends JFrame implements ActionListener, MouseListener
     //game statuses
     boolean gameInProgress=false; //whether or not the game has started
     boolean loadGame = false; //whether or not the game has been loaded. this is a separate boolean from gameInProgress so that gameplay can be ended, but the board will remain loaded
-    int currentPlayer = 1; //whos turn it is. player 1 starts on default.
+    int currentPlayer; //whos turn it is. player 1 starts on default.
     public gui()
     {
         System.out.println('\u000c'); //clears terminal  
@@ -66,18 +70,21 @@ public class gui extends JFrame implements ActionListener, MouseListener
         File = new JMenu("File"); //file menu
         bar.add(File); //add file menu to bar
 
-        JMenuItem A= new JMenuItem("Play"); //creates play button
+        JMenuItem A= new JMenuItem("Start"); //creates play button
+        A.setAccelerator(KeyStroke.getKeyStroke('s'));
         A.addActionListener(this);
         File.add(A); // adds play button to file menu
 
         JMenuItem B= new JMenuItem("Quit");
+        B.setAccelerator(KeyStroke.getKeyStroke('q'));
         B.addActionListener(this);
         File.add(B);
         //Help menu
         Help = new JMenu("Help"); //creates help menu
         bar.add(Help);// adds help menu to bar
 
-        JMenuItem C= new JMenuItem("HELP");
+        JMenuItem C= new JMenuItem("About");
+        C.setAccelerator(KeyStroke.getKeyStroke('a'));
         C.addActionListener(this);
         Help.add(C); //adds help button to help menu
         this.pack();
@@ -92,12 +99,28 @@ public class gui extends JFrame implements ActionListener, MouseListener
         setVisible(true);
         repaint();
     }
-
+    
+    
+    public void gameBoot(){
+        gameInProgress = true; 
+        loadGame = true; 
+        clearBoard(); 
+        int a=1;
+        int b=2;
+        int get = new Random().nextBoolean()? a : b; //randomiser taken from sta
+        currentPlayer = get;
+        if (currentPlayer == 1) text = "Blue Starts";
+        else text = "Yellow Starts";
+        repaint();
+        //everything that needs to be set/reset when 'Play' is pressed
+    }
+    
+    
     public int returnColumn (int mFromLeft){
         double placeX = Math.floor((mFromLeft-70)/100);
         return (int) placeX;
         //I don't rmeember where exactly I got this method, but it is definitely not entirely my original work
-
+        //returning the column that a mouse is in for piece placement
     }
 
     public void changePlayer(){
@@ -116,13 +139,11 @@ public class gui extends JFrame implements ActionListener, MouseListener
 
         //does what it says: changes player when trigerred. could be written better but its a basic piece of code anyway
     }
-
-    public void gameWin(){
-        gameInProgress = false;
-        if(currentPlayer == 1) text = "Blue wins!"; repaint(); //there's probablly a better way of doing this
-        if(currentPlayer == 2) text = "Yellow wins!"; repaint(); //seriously this is a lot of repaints
+    
+    void gui(){
+        JDialog mess = new JDialog(this);
     }
-
+    
     public void clearBoard(){
         for (int j=0;j<rows; j++){ // x = row, y = column
             for(int i=0; i<columns; i++){
@@ -131,6 +152,13 @@ public class gui extends JFrame implements ActionListener, MouseListener
         }
     }
 
+    //game win display messages
+    public void gameWin(){
+        gameInProgress = false;
+        if(currentPlayer == 1) text = "Blue wins!"; repaint(); //there's probablly a better way of doing this
+        if(currentPlayer == 2) text = "Yellow wins!"; repaint(); //seriously this is a lot of repaints
+    }
+    
     public void mouseEntered(MouseEvent e){}
 
     public void mouseExited(MouseEvent e){}    
@@ -161,8 +189,8 @@ public class gui extends JFrame implements ActionListener, MouseListener
                     }
                     board[mouseRow-1][mouseColumn] = currentPlayer;
 
+                    int count = 0; //initialising counter. obviously, you can't know of any connections before you actually look for said connections, therefore the counter starts at 0
                     //horizontal win
-                    int count = 0; //reset counter
 
                     System.out.println("player is " + currentPlayer);
                     for (int i=0; i<columns;i++){ //for loop for checking through all columns
@@ -174,19 +202,21 @@ public class gui extends JFrame implements ActionListener, MouseListener
                         }
                         //System.out.println("horizontal " + count);
                     }
-
+                    
                     //vertical win
-                    for (int i=0; i<rows; i++){
+                    count = 0; //reset counter to avoid carryover
+                    for (int i=0; i<rows; i++){ //for loop checking through all rows
                         if(board[i][mouseColumn]==currentPlayer){
-                            count++;
+                            count++; //if a given slot has the right colour, counter goes up
                             if (count>=4) gameWin();
                         } else {
-                            count = 0;
+                            count = 0; //restart streak
                         }
                         //System.out.println("vertical " + count);
                     }
-
+                    
                     //diagonal win (left to right)
+                    count = 0; //reset counter to avoid carryover
                     for(int i = 5; i>=0; i--){
                         for(int j = 0; j < columns; j++){
                             for(int x = j, y = i; x < columns && y >= 0; x++, y--){
@@ -196,30 +226,50 @@ public class gui extends JFrame implements ActionListener, MouseListener
                                 } else {
                                     count = 0;
                                 }
-                                System.out.println("Diagonal A count " + count);
+                                //System.out.println("Diagonal A " + count);
                             }
+                            count = 0;
                         }
                     }
                     
                     //diagonal win (right to left)
+                    count = 0; //reset counter to avoid carryover
                     for(int i = 5; i>=0; i--){
                         for(int j = 6; j >= 0; j--){
                             for(int x = j, y = i; x >= 0 && y >= 0; x--, y--){
                                 if (board[y][x] == currentPlayer){
                                     count++;
-                                    if (count>=4) gameWin();
+                                    if (count>=4) gameWin(); 
                                 } else {
                                     count = 0;
                                 }
-                                System.out.println("Diagonal B count " + count);
+                                //System.out.println("Diagonal B " + count);
                             }
+                            count = 0;
+                        }
+                    }
+                    
+                    //tie
+                    count = 0; //reset counter to avoid carryover
+                    for(int i = 0; i<columns; i++){
+                        if (board[0][i] != 0){
+                            count++;
+                            System.out.println("tie " + count);
+                            if(count >= columns) {
+                                gameInProgress = false; 
+                                text = "Tie!"; 
+                                repaint();
+                            }
+                        } else {
+                            count = 0;
                         }
                     }
 
                     changePlayer();
 
                 } else { //else if the top of the column is already full
-                    System.out.println("this column is full!"); //change to dialog box later?
+                    System.out.println("column full!!");
+                    //change to dialog box later?
                 }
 
                 //y value
@@ -237,16 +287,16 @@ public class gui extends JFrame implements ActionListener, MouseListener
                 for(int col=0; col<columns; col++){
                     switch(board[row][col]){
                         case 0: //empty cell
-                            imageEmpty.paintIcon(this,g,col*100+y,row*100+x);
+                            imageEmpty.paintIcon(this,g,col*100+x,row*100+y);
                             break; //100 = accounting for image x and y
                         case 1: //player 1
-                            image1.paintIcon(this,g,col*100+y,row*100+x);
+                            image1.paintIcon(this,g,col*100+x,row*100+y);
                             break;
                         case 2: //player 2
-                            image2.paintIcon(this,g,col*100+y,row*100+x);
+                            image2.paintIcon(this,g,col*100+x,row*100+y);
                             break;
                         case 3:
-                            image3.paintIcon(this,g,col*100+y,row*100+x);
+                            image3.paintIcon(this,g,col*100+x,row*100+y);
                             break;
                         default:
                             break;
@@ -256,8 +306,8 @@ public class gui extends JFrame implements ActionListener, MouseListener
         }
 
         Graphics2D g2 = (Graphics2D) g;
-        g2.setFont(new Font("Dialog", Font.PLAIN, 25));
-        g2.drawString(text,80,740);
+        g2.setFont(new Font("Serif", Font.PLAIN, 25));
+        g2.drawString(text,80,120);
     }
 
     public void actionPerformed(ActionEvent e){
@@ -271,14 +321,9 @@ public class gui extends JFrame implements ActionListener, MouseListener
                 //text string outside of void
                 //void loop for the dialog box itself
                 break;
-            case "Play": {
-                gameInProgress = true; 
-                loadGame = true; 
-                clearBoard(); 
-                if (currentPlayer == 1) text = "Blue Starts";
-                else text = "Yellow Starts";
-                repaint();
-                break;}
+            case "Start": 
+                gameBoot();
+                break;
         }
 
     }
