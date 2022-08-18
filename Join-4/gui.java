@@ -1,5 +1,3 @@
-
-
 /**
  * four-in-a-row game that is definitely not Connect 4
  *
@@ -10,7 +8,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*; //listener
 import java.util.Scanner; //input scanner
-import java.util.Random;
+import java.util.Random; //random number generator for player selection
+import java.io.File; //file reader for reading instruction file
+import java.io.IOException;
 
 public class gui extends JFrame implements ActionListener, MouseListener
 {
@@ -21,7 +21,6 @@ public class gui extends JFrame implements ActionListener, MouseListener
     JMenu File, Help;
     JMenuItem A, B, C; //A=Play, B=Quit, C=Help
     static JFrame fram;
-    static JLabel lab = new JLabel("");
     String text = "";
     String text2 = "";
 
@@ -44,6 +43,11 @@ public class gui extends JFrame implements ActionListener, MouseListener
     ImageIcon image2=    new ImageIcon(player2);
     ImageIcon imageEmpty= new ImageIcon(empty);
     ImageIcon image3=    new ImageIcon(select);
+    
+    //alerts
+    File myFile=new File("help.txt"); //instruction file name
+    int boxW; //dialog box width
+    int boxH; //dialog box height
 
     //game statuses
     boolean gameInProgress=false; //whether or not the game has started
@@ -142,6 +146,13 @@ public class gui extends JFrame implements ActionListener, MouseListener
     
     void gui(){
         JDialog mess = new JDialog(this);
+        mess.setBounds (800,150,boxW,boxH);
+        TextArea area = new TextArea(text2);
+        area.setEditable(false);
+        mess.add(area);
+        mess.toFront();
+        mess.setVisible(true);
+        mess.setTitle("Alert");
     }
     
     public void clearBoard(){
@@ -316,10 +327,17 @@ public class gui extends JFrame implements ActionListener, MouseListener
             case "Quit":
                 System.exit(0);
                 break;
-            case "HELP":
-                //text stuff
-                //text string outside of void
-                //void loop for the dialog box itself
+            case "About":
+                try{
+                    boxW = 400;
+                    boxH = 200;
+                    text2 = new Scanner(myFile).useDelimiter("\\Z").next();
+                    //learned about \\Z from https://riptutorial.com/java/example/700/read-the-entire-input-as-a-string-using-scanner
+                    gui();
+                } catch (IOException o){ //e is already taken so i had to improvise
+                    o.printStackTrace();
+                }
+                
                 break;
             case "Start": 
                 gameBoot();
