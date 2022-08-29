@@ -22,6 +22,7 @@ public class gui extends JFrame implements ActionListener, MouseListener
     JMenuItem A, B, C; //A=Play, B=Quit, C=Help
     static JFrame fram;
     String text = "";
+    String text2 = "";
 
     //table
     JTable tab;
@@ -36,28 +37,25 @@ public class gui extends JFrame implements ActionListener, MouseListener
     final String player1="player.png";
     final String player2="player2.png";
     final String empty="empty.png";
-    //final String select="select.png";
-    
+    final String select="select.png";
     //image icons
     ImageIcon image1=    new ImageIcon(player1);
     ImageIcon image2=    new ImageIcon(player2);
     ImageIcon imageEmpty= new ImageIcon(empty);
-    //ImageIcon image3=    new ImageIcon(select);
+    ImageIcon image3=    new ImageIcon(select);
     
     //alerts
     File myFile=new File("help.txt"); //instruction file name
     int boxW; //dialog box width
     int boxH; //dialog box height
-    static JFrame f;
-    String text2 = "";
-    
+
     //game statuses
     boolean gameInProgress=false; //whether or not the game has started
     boolean loadGame = false; //whether or not the game has been loaded. this is a separate boolean from gameInProgress so that gameplay can be ended, but the board will remain loaded
     int currentPlayer; //whos turn it is. player 1 starts on default.
     public gui()
     {
-        System.out.println('\u000c'); //clears terminal  
+        //System.out.println('\u000c'); //clears terminal  
         setTitle("Join 4"); //sets window title
         menuX = 850;
         menuY = 800;
@@ -113,7 +111,7 @@ public class gui extends JFrame implements ActionListener, MouseListener
         clearBoard(); 
         int a=1;
         int b=2;
-        int get = new Random().nextBoolean()? a : b; //randomiser taken from sta
+        int get = new Random().nextBoolean()? a : b; //randomiser taken from stack overflow
         currentPlayer = get;
         if (currentPlayer == 1) text = "Blue Starts";
         else text = "Yellow Starts";
@@ -147,9 +145,14 @@ public class gui extends JFrame implements ActionListener, MouseListener
     }
     
     void gui(){
-        
-        JOptionPane.showMessageDialog(f,text2,"Alert",JOptionPane.INFORMATION_MESSAGE);
-        f=new JFrame();
+        JDialog mess = new JDialog(this);
+        mess.setBounds (800,150,boxW,boxH);
+        TextArea area = new TextArea(text2);
+        area.setEditable(false);
+        mess.add(area);
+        mess.toFront();
+        mess.setVisible(true);
+        mess.setTitle("Alert");
     }
     
     public void clearBoard(){
@@ -198,7 +201,6 @@ public class gui extends JFrame implements ActionListener, MouseListener
                         }
                     }
                     board[mouseRow-1][mouseColumn] = currentPlayer;
-                    repaint();
 
                     int count = 0; //initialising counter. obviously, you can't know of any connections before you actually look for said connections, therefore the counter starts at 0
                     //horizontal win
@@ -265,11 +267,11 @@ public class gui extends JFrame implements ActionListener, MouseListener
                     for(int i = 0; i<columns; i++){
                         if (board[0][i] != 0){
                             count++;
-                            System.out.println("tie " + count);
+                            //System.out.println("tie " + count);
                             if(count >= columns) {
                                 gameInProgress = false; 
-                                text2 = "Tie!"; 
-                                gui();
+                                text = "Tie!"; 
+                                repaint();
                             }
                         } else {
                             count = 0;
@@ -279,16 +281,17 @@ public class gui extends JFrame implements ActionListener, MouseListener
                     changePlayer();
 
                 } else { //else if the top of the column is already full
-                    text2 = "Column is full";
+                    boxW = 100; boxH= 80;
+                    text2 = "column full!!";
                     gui();
                     //change to dialog box later?
                 }
 
                 //y value
                 //status
-                
+                repaint();
             };
-            System.out.println("column is " + mouseColumn);
+            //System.out.println("column is " + mouseColumn);
         }
     }
 
@@ -338,7 +341,6 @@ public class gui extends JFrame implements ActionListener, MouseListener
                 } catch (IOException o){ //e is already taken so i had to improvise
                     o.printStackTrace();
                 }
-                
                 break;
             case "Start": 
                 gameBoot();
