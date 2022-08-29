@@ -22,7 +22,6 @@ public class gui extends JFrame implements ActionListener, MouseListener
     JMenuItem A, B, C; //A=Play, B=Quit, C=Help
     static JFrame fram;
     String text = "";
-    String text2 = "";
 
     //table
     JTable tab;
@@ -37,18 +36,21 @@ public class gui extends JFrame implements ActionListener, MouseListener
     final String player1="player.png";
     final String player2="player2.png";
     final String empty="empty.png";
-    final String select="select.png";
+    //final String select="select.png";
+    
     //image icons
     ImageIcon image1=    new ImageIcon(player1);
     ImageIcon image2=    new ImageIcon(player2);
     ImageIcon imageEmpty= new ImageIcon(empty);
-    ImageIcon image3=    new ImageIcon(select);
+    //ImageIcon image3=    new ImageIcon(select);
     
     //alerts
     File myFile=new File("help.txt"); //instruction file name
     int boxW; //dialog box width
     int boxH; //dialog box height
-
+    static JFrame f;
+    String text2 = "";
+    
     //game statuses
     boolean gameInProgress=false; //whether or not the game has started
     boolean loadGame = false; //whether or not the game has been loaded. this is a separate boolean from gameInProgress so that gameplay can be ended, but the board will remain loaded
@@ -145,14 +147,9 @@ public class gui extends JFrame implements ActionListener, MouseListener
     }
     
     void gui(){
-        JDialog mess = new JDialog(this);
-        mess.setBounds (800,150,boxW,boxH);
-        TextArea area = new TextArea(text2);
-        area.setEditable(false);
-        mess.add(area);
-        mess.toFront();
-        mess.setVisible(true);
-        mess.setTitle("Alert");
+        
+        JOptionPane.showMessageDialog(f,text2,"Alert",JOptionPane.INFORMATION_MESSAGE);
+        f=new JFrame();
     }
     
     public void clearBoard(){
@@ -166,8 +163,10 @@ public class gui extends JFrame implements ActionListener, MouseListener
     //game win display messages
     public void gameWin(){
         gameInProgress = false;
-        if(currentPlayer == 1) text = "Blue wins!"; repaint(); //there's probablly a better way of doing this
-        if(currentPlayer == 2) text = "Yellow wins!"; repaint(); //seriously this is a lot of repaints
+        boxW = 100;
+        boxH = 80;
+        if(currentPlayer == 1) text2 = "Blue wins!"; gui(); //there's probablly a better way of doing this
+        if(currentPlayer == 2) text2 = "Yellow wins!"; gui(); //seriously this is a lot of repaints
     }
     
     public void mouseEntered(MouseEvent e){}
@@ -199,6 +198,7 @@ public class gui extends JFrame implements ActionListener, MouseListener
                         }
                     }
                     board[mouseRow-1][mouseColumn] = currentPlayer;
+                    repaint();
 
                     int count = 0; //initialising counter. obviously, you can't know of any connections before you actually look for said connections, therefore the counter starts at 0
                     //horizontal win
@@ -268,8 +268,8 @@ public class gui extends JFrame implements ActionListener, MouseListener
                             System.out.println("tie " + count);
                             if(count >= columns) {
                                 gameInProgress = false; 
-                                text = "Tie!"; 
-                                repaint();
+                                text2 = "Tie!"; 
+                                gui();
                             }
                         } else {
                             count = 0;
@@ -279,13 +279,14 @@ public class gui extends JFrame implements ActionListener, MouseListener
                     changePlayer();
 
                 } else { //else if the top of the column is already full
-                    System.out.println("column full!!");
+                    text2 = "Column is full";
+                    gui();
                     //change to dialog box later?
                 }
 
                 //y value
                 //status
-                repaint();
+                
             };
             System.out.println("column is " + mouseColumn);
         }
@@ -306,9 +307,9 @@ public class gui extends JFrame implements ActionListener, MouseListener
                         case 2: //player 2
                             image2.paintIcon(this,g,col*100+x,row*100+y);
                             break;
-                        case 3:
+                        /*case 3:
                             image3.paintIcon(this,g,col*100+x,row*100+y);
-                            break;
+                            break;*/
                         default:
                             break;
                     }
