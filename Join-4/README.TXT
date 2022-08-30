@@ -1,12 +1,14 @@
-------------------------------------------------------------------------
-This is the project README file. Here, you should describe your project.
-Tell the reader (someone who does not know anything about this project)
-all they need to know. The comments should usually include at least:
-------------------------------------------------------------------------
-
 PROJECT TITLE: Join Four
-PURPOSE OF PROJECT: Connect 4 2: Electric Boogaloo
-VERSION or DATE: 13/05/22
-HOW TO START THIS PROJECT: ¯\_(ツ)_/¯
-AUTHORS: Lin Beliaeva
-USER INSTRUCTIONS: Don't mess with the matrix
+PURPOSE OF PROJECT: Digital two=player four-in-a-row game
+VERSION or DATE: 30/08/22
+HOW TO START THIS PROJECT: open MainRun.jar 
+AUTHOR: Polina Beliaeva
+USER INSTRUCTIONS: 
+==============================================
+open MainRun to start the program
+'Start' or 's' to start a new game
+'About' or 'a' for instructions
+'Quit' or 'q' to quit
+
+Decide who uses what colour (blue or yellow)
+Use mouse to select column in which you want to place your piece
